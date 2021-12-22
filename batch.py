@@ -57,10 +57,12 @@ def get_random_batch(data_cube, label_coordinates, im_size, batch_size,
 
         # We seek to have a balanced batch with equally many samples from each class.
         n_for_class += 1
-        if n_for_class+1 > int(.5+batch_size / float(n_classes) ):
-            if class_ind < n_classes-1:
-                class_ind += 1
-                n_for_class = 0
+        if (
+            n_for_class + 1 > int(0.5 + batch_size / float(n_classes))
+            and class_ind < n_classes - 1
+        ):
+            class_ind += 1
+            n_for_class = 0
 
 
 
@@ -81,18 +83,13 @@ def getGrid(im_size):
     x0 = np.expand_dims(x0.ravel(), 0)
     x1 = np.expand_dims(x1.ravel(), 0)
     x2 = np.expand_dims(x2.ravel(), 0)
-    grid = np.concatenate((x0, x1, x2), axis=0)
-
-    return grid
+    return np.concatenate((x0, x1, x2), axis=0)
 
 """ Random flip of non-depth axes """
 def augment_flip(grid):
-    #Flip x axis
     if rand_bool():
         grid[1,:] = -grid[1,:]
 
-    #Flip y axis
-    if rand_bool():
         grid[2, :] = -grid[2, :]
 
     return grid

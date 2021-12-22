@@ -67,7 +67,7 @@ class TextureNet(nn.Module):
 
         #Make new network that has the layers up to the requested output
         tmp_net = nn.Sequential()
-        layers = list(self.net.children())[0:layer_indexes[layer_no]+1]
+        layers = list(self.net.children())[:layer_indexes[layer_no]+1]
         for i in range(len(layers)):
             tmp_net.add_module(str(i),layers[i])
         if type(gpu_no_of_var(self)) == int:

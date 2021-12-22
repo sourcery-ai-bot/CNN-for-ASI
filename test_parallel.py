@@ -161,7 +161,7 @@ def main_worker(gpu, ngpus_per_node, args):
 
     # reduce data size for debugging
     if args.debug:
-        data = data[0 : 3 * window]
+        data = data[:3 * window]
 
     # generate full list of coordinates
     # memory footprint of this isn't large yet, so not need to wrap as a generator
@@ -181,7 +181,7 @@ def main_worker(gpu, ngpus_per_node, args):
 
     # we only score first batch in debug mode
     if args.debug:
-        coord_list = coord_list[0 : args.batch_size]
+        coord_list = coord_list[:args.batch_size]
 
     # prepare the data
     print("setup dataset")

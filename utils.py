@@ -193,13 +193,12 @@ def gpu_no_of_var(var):
     except:
         is_cuda = var.is_cuda
 
-    if is_cuda:
-        try:
-            return next(var.parameters()).get_device()
-        except:
-            return var.get_device()
-    else:
+    if not is_cuda:
         return False
+    try:
+        return next(var.parameters()).get_device()
+    except:
+        return var.get_device()
 
 
 #Take a pytorch variable and make numpy
@@ -209,10 +208,7 @@ def var_to_np(var):
 
     #If input is list we do this for all elements
     if type(var) == type([]):
-        out = []
-        for v in var:
-            out.append(var_to_np(v))
-        return out
+        return [var_to_np(v) for v in var]
 
     try:
         var = var.cpu()
@@ -236,9 +232,12 @@ def computeAccuracy(predicted_class, labels):
     labels = var_to_np(labels)
     predicted_class = var_to_np(predicted_class)
 
-    accuracies = {}
-    for cls in np.unique(labels):
-        if cls>=0:
-            accuracies['accuracy_class_' + str(cls)] = int(np.mean(predicted_class[labels==cls]==cls)*100)
-    accuracies['average_class_accuracy'] = np.mean([acc for acc in accuracies.values()])
+    accuracies = {
+        'accuracy_class_'
+        + str(cls): int(np.mean(predicted_class[labels == cls] == cls) * 100)
+        for cls in np.unique(labels)
+        if cls >= 0
+    }
+
+    accuracies['average_class_accuracy'] = np.mean(list(accuracies.values()))
     return accuracies

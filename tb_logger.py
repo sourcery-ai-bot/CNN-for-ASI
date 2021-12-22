@@ -75,7 +75,7 @@ class TBLogger(object):
         for nr, img in enumerate(images):
 
             #Grayscale
-            if cm == 'gray' or cm == 'grey':
+            if cm in ['gray', 'grey']:
                 img = img.astype('float')
                 img = np.repeat(np.expand_dims(img,2),3,2)
                 img -= img.min()
@@ -95,8 +95,8 @@ class TBLogger(object):
             im_summaries.append(tf.compat.v1.Summary.Value(tag='%s/%d' % (tag, nr),
                                                  image=img_sum))
 
-            #if nr == max_imgs-1:
-            #    break
+                #if nr == max_imgs-1:
+                #    break
 
         # Create and write Summary
         summary = tf.compat.v1.Summary(value=im_summaries)
